@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apology Letter 💌</title>
+
   <style>
     body {
       margin: 0;
@@ -52,6 +53,15 @@
 
     .hidden { display: none; }
 
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
     .hearts {
       position: fixed;
       inset: 0;
@@ -68,19 +78,12 @@
       from { opacity: 1; transform: translateY(0) scale(0.5); }
       to { opacity: 0; transform: translateY(-120px) scale(1.4); }
     }
-
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      border-radius: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
   </style>
 </head>
+
 <body>
 
+<!-- MAIN PAGE -->
 <div class="card" id="mainPage">
   <h1>Apology Letter 💌</h1>
   <p>Hi Charitha (Kukka) 🥺</p>
@@ -94,14 +97,17 @@
     <button class="danger" id="option4">4️⃣ Naakem voddu 😤</button>
   </div>
 
-  <p style="margin-top:10px;font-size:13px;color:#888;">No pressure… but I really miss us 🤍</p>
+  <p style="margin-top:10px;font-size:13px;color:#888;">
+    No pressure… but I really miss us 🤍
+  </p>
 </div>
 
+<!-- OPTION 1 -->
 <div class="card hidden" id="option1Page">
   <h1>Chipotle burger kaavala? 🍔</h1>
   <p>Sare isthe… naatho matlaadataava? 🥺</p>
 
-  <div class="buttons" style="grid-template-columns:1fr 1fr; display:grid;">
+  <div class="buttons" style="grid-template-columns:1fr 1fr;">
     <button class="primary" onclick="burgerYes()">Yes 🤍</button>
     <button class="secondary" id="burgerNo">No 😌</button>
   </div>
@@ -109,27 +115,52 @@
   <button class="outline" onclick="goBack()">← Go Back</button>
 </div>
 
+<!-- OPTION 2 -->
 <div class="card hidden" id="option2Page">
   <h1>🌙 Space Ah?</h1>
-  <p>Eyy alredy 2 days icha entha kaavele neeku… dobbey. Naaku baada osthundi 😭 max inko oka roju istha space anthe.</p>
-  <audio autoplay>
+  <p>Eyy alredy 2 days icha entha kaavele neeku… dobbey. Naaku baada osthundi 😭</p>
+
+  <audio autoplay muted loop>
     <source src="sad-violin.mp3" type="audio/mpeg">
   </audio>
+
   <button class="outline" onclick="goBack()">← Go Back</button>
 </div>
 
+<!-- OPTION 3 -->
 <div class="card hidden" id="option3Page">
   <h1>Tell Me What Hurt You ✍️</h1>
-  <textarea id="feedback" placeholder="Write anything you want…"></textarea>
+
+  <p>
+    I really want to understand…  
+    Can we fix this? 🥺
+  </p>
+
+  <div class="buttons" style="grid-template-columns:1fr 1fr;">
+    <button class="primary" onclick="spaceYes()">Yes 🤍</button>
+    <button class="secondary" onclick="spaceNo()">No 😌</button>
+  </div>
+
+  <button class="outline" onclick="goBack()">← Go Back</button>
+</div>
+
+<!-- DAYS PAGE -->
+<div class="card hidden" id="daysPage">
+  <h1>How many days space kaavali? ⏳</h1>
+
+  <textarea id="daysInput" placeholder="Tell me honestly…"></textarea>
+
   <div class="buttons">
-    <button class="primary" onclick="sendFeedback()">Send 💌</button>
+    <button class="primary" onclick="sendDays()">Send 💌</button>
     <button class="outline" onclick="goBack()">← Go Back</button>
   </div>
 </div>
 
 <div class="hearts" id="hearts"></div>
 
+<!-- EMAILJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <script>
   (function() {
     emailjs.init("Dcf3SfschPSnAlXID");
@@ -139,6 +170,7 @@
   const option1Page = document.getElementById("option1Page");
   const option2Page = document.getElementById("option2Page");
   const option3Page = document.getElementById("option3Page");
+  const daysPage = document.getElementById("daysPage");
 
   function openOption1() {
     mainPage.classList.add("hidden");
@@ -159,6 +191,7 @@
     option1Page.classList.add("hidden");
     option2Page.classList.add("hidden");
     option3Page.classList.add("hidden");
+    daysPage.classList.add("hidden");
     mainPage.classList.remove("hidden");
   }
 
@@ -167,10 +200,23 @@
     explodeHearts();
   }
 
-  function sendFeedback() {
-    const msg = document.getElementById("feedback").value;
-    if (!msg.trim()) return alert("Write something 😌");
-    sendEmail(msg);
+  function spaceYes() {
+    sendEmail("inka 1 day space kavali");
+  }
+
+  function spaceNo() {
+    option3Page.classList.add("hidden");
+    daysPage.classList.remove("hidden");
+  }
+
+  function sendDays() {
+    const msg = document.getElementById("daysInput").value;
+
+    if (!msg.trim()) {
+      return alert("Write number of days 😌");
+    }
+
+    sendEmail("She needs space for: " + msg);
   }
 
   function sendEmail(message) {
@@ -183,6 +229,7 @@
 
   function explodeHearts() {
     const hearts = document.getElementById("hearts");
+
     for (let i = 0; i < 12; i++) {
       const heart = document.createElement("div");
       heart.className = "heart";
@@ -190,6 +237,7 @@
       heart.style.left = Math.random() * window.innerWidth + "px";
       heart.style.top = Math.random() * window.innerHeight + "px";
       hearts.appendChild(heart);
+
       setTimeout(() => heart.remove(), 1200);
     }
   }
@@ -210,5 +258,4 @@
 </script>
 
 </body>
-
 </html>
